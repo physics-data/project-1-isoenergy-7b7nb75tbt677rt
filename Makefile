@@ -8,6 +8,14 @@ all: $(fl:%=p_momentum/%.png)
 all: $(fl:%=dos-position/%.h5) $(fl:%=dos-position/m/%.h5)
 all: $(fl:%=dos-position/damp/%.h5) $(fl:%=dos-position/m/damp/%.h5)
 all: dos-multi-position/0001.h5
+all: $(fl:%=anisotropic_scatter/dos-position/%.h5)
+all: $(fl:%=anisotropic_scatter/STM/%.png)
+all: $(fl:%=anisotropic_scatter/dos-position/m/%.h5)
+all: $(fl:%=anisotropic_scatter/STM/m/%.png)
+all: $(fl:%=anisotropic_scatter/dos-position/damp/%.h5)
+all: $(fl:%=anisotropic_scatter/STM/damp/%.png)
+all: $(fl:%=anisotropic_scatter/dos-position/damp/m/%.h5)
+all: $(fl:%=anisotropic_scatter/STM/damp/m/%.png)
 
 SHELL:=/bin/bash
 
@@ -41,10 +49,35 @@ STM/%.png: dos-position/%.h5 gimage.py
 	mkdir -p $(dir $@)
 	python3 gimage.py 1 $< $@
 
-
-dos-multi-position/0001.h5: multi_scatter_position.csv dos-position/0058.h5 dosposition/0067.h5 dos-position/0043.h5 dos-position/0083.h5 dosposition/0012.h5 dos-position/0040.h5 dos-position/0018.h5
+# 多中心散射
+dos-multi-position/0001.h5: multi_scatter_position.csv dos-momentum/0001.h5
 	mkdir -p $(dir $@)
 	python3 multi_scatter.py 0 $^ $@
+
+# 各向异性散射
+anisotropic_scatter/dos-position/%.h5: dos-momentum/%.h5 anisotropic_scatter.py
+	mkdir -p $(dir $@)
+	python3 anisotropic_scatter.py 0 -1 $< $@
+
+# 磁性各向异性散射
+anisotropic_scatter/dos-position/m/%.h5: dos-momentum/%.h5 anisotropic_scatter.py
+	mkdir -p $(dir $@)
+	python3 anisotropic_scatter.py 1 -1 $< $@
+
+# 加入衰减的各向异性散射
+anisotropic_scatter/dos-position/damp/%.h5: dos-momentum/%.h5 anisotropic_scatter.py
+	mkdir -p $(dir $@)
+	python3 anisotropic_scatter.py 0 20 $< $@
+
+# 加入衰减的磁性各向异性散射
+anisotropic_scatter/dos-position/damp/m/%.h5: dos-momentum/%.h5 anisotropic_scatter.py
+	mkdir -p $(dir $@)
+	python3 anisotropic_scatter.py 1 20 $< $@
+
+# 画各向异性散射的实空间电子态密度图像
+anisotropic_scatter/STM/%.png: anisotropic_scatter/dos-position/%.h5 aniso_gimage.py
+	mkdir -p $(dir $@)
+	python3 aniso_gimage.py $< $@
 
 # Delete partial files when the processes are killed.
 .DELETE_ON_ERROR:
