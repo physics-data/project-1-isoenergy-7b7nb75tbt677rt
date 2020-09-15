@@ -8,6 +8,7 @@ all: $(fl:%=p_momentum/%.png)
 all: $(fl:%=dos-position/%.h5) $(fl:%=dos-position/m/%.h5)
 all: $(fl:%=dos-position/damp/%.h5) $(fl:%=dos-position/m/damp/%.h5)
 all: dos-multi-position/0001.h5
+# 以下是新加入的部分，用于提高部分的计算。计算实空间态密度并画图，储存结果。
 all: $(fl:%=anisotropic_scatter/dos-position/%.h5)
 all: $(fl:%=anisotropic_scatter/STM/%.png)
 all: $(fl:%=anisotropic_scatter/dos-position/m/%.h5)

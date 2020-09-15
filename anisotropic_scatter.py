@@ -4,7 +4,7 @@ import sys
 import h5py
 import numpy as np
 
-# 提高要求的第一部分，按照 README.pdf 中的概率公式来计算。
+# 提高要求的第一部分，按照 README.pdf 中给出的的概率公式来计算。
 
 mode = int(sys.argv[1]) # 若为 0 则为普通散射，1 则为磁性散射。
 damp = float(sys.argv[2]) # 衰减系数，若无衰减应输入 -1。
@@ -45,6 +45,7 @@ A3 = np.tensordot(A2, C1, (0, 0)).imag
 if damp >= 0: # 若该参数小于零则无衰减。
 	A3 = A3 * np.exp(-r / L)
 A3 = np.power(A3, 2)
+# 这里计算的是乘上了 (kx/k) 因子的项。
 # 这里的计算与 scatter.py 中的同理，下同。
 # 稍有不同的是：因为 kx_on_k 因子的存在，函数奇偶性发生反转，求和后不再是虚部为
 # 零而是实部为零，故取其虚部。
@@ -54,12 +55,14 @@ B3 = np.tensordot(B2, C1, (0, 0)).imag
 if damp >= 0:
 	B3 = B3 * np.exp(-r / L)
 B3 = np.power(B3, 2)
+# 这里计算的是乘上了 (ky/k) 因子的项。
 
 C2 = np.tensordot(dos, C1, (0, 0))
 C3 = np.tensordot(C2, C1, (0, 0)).real
 if damp >= 0:
 	C3 = C3 * np.exp(-r / L)
 C3 = np.power(C3, 2)
+# 这里计算的是乘上了常数因子的项。
 
 C4 = 0.5 * (C3 - A3 - B3) + np.power(np.sum(dos), 2) * np.power(-1, mode)
 C4 = np.power(C4, 2)

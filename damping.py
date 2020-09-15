@@ -18,7 +18,7 @@ y = np.power(y, 2)
 r = np.power(x + y, 0.5)
 # r 为格点到中心格点的距离
 L = 20 * length / 100
-# 由于实空间格点更密集，衰减常数需要乘以一个因子。
+# 由于实空间格点更密集（2001 * 2001），衰减常数需要乘以一个因子。
 dos = dos * np.exp(- r * (1 / L))
 
 with h5py.File(outputfile, "w") as opt:

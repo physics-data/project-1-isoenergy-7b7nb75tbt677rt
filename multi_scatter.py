@@ -10,10 +10,10 @@ inputfile = sys.argv[3]
 outputfile = sys.argv[4]
 
 data = []
-# 用来储存散射点的坐标（是图片上的坐标，不是以中心为零点的坐标）。
+# 用来储存散射点的坐标（是数组中的坐标，不是以中心为零点的坐标）。
 with open(MSP, "r") as csvfile:
 	reader = csv.reader(csvfile, skipinitialspace=True)
-	next(reader)
+	next(reader) # 把第一行跳过。
 	for x, y in reader:
 		data.append((int(x), int(y)))
 
@@ -26,7 +26,7 @@ kxy = np.arange(-100, 101)
 A1 = np.exp(np.tensordot(kxy, xy, axes=0) * (1j*np.pi/length))
 A2 = np.tensordot(dos, A1, (0, 0))
 A3 = np.tensordot(A2, A1, (0, 0)).real
-# 与 scatter.py 中一样的步骤，对动量空间态密度做傅里叶变换。
+# 对动量空间态密度做傅里叶变换，与 scatter.py 中一样的步骤，故不细讲。
 
 A3 = A3[np.mod(np.arange(-length-1, length), 1+2*length),:]
 A3 = A3[:,np.mod(np.arange(-length-1, length), 1+2*length)]
