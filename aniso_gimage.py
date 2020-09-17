@@ -15,5 +15,8 @@ with h5py.File(inputfile, "r") as ipt:
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots(figsize=(10, 10))
 im = ax.imshow(dos)
+ax.set_xlabel('x label')
+ax.set_ylabel('y label')
+ax.set_title("QPI")
 fig.colorbar(im)
 plt.savefig(outputfile)
